@@ -18,7 +18,7 @@ Assurez-vous d'avoir Python 3.6 ou une version ultérieure installé sur votre s
 
 ## Utilisation
 
-Pour utiliser Anarchtech, lancez l'application en exécutant `main.py`. Lors du premier démarrage, un menu d'installation s'affichera. Suivez les instructions pour configurer l'application. Vous pouvez ensuite utiliser l'éditeur de texte pour ouvrir, éditer et sauvegarder vos documents. Ajoutez ou supprimez des utilisateurs à l'aide des boutons appropriés, et gérez les notifications selon vos besoins. Vous pouvez également afficher des citations inspirantes et rechercher du texte dans vos documents.
+Pour utiliser Anarchtech, lancez l'application en exécutant `Anartech.py`. Lors du premier démarrage, un menu d'installation s'affichera. Suivez les instructions pour configurer l'application. Vous pouvez ensuite utiliser l'éditeur de texte pour ouvrir, éditer et sauvegarder vos documents. Ajoutez ou supprimez des utilisateurs à l'aide des boutons appropriés, et gérez les notifications selon vos besoins. Vous pouvez également afficher des citations inspirantes et rechercher du texte dans vos documents.
 
 ## Développement
 
