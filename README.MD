@@ -14,7 +14,7 @@ Bienvenue dans **Anarchtech** ! Cette application de traitement de texte est con
 
 ## Installation
 
-Assurez-vous d'avoir Python 3.6 ou une version ultérieure installé sur votre système. Pour installer Anarchtech, clonez le dépôt avec la commande `git clone https://github.com/ANF122/Anarctech.git`, puis accédez au répertoire cloné avec `cd anarchtech`. Installez les dépendances nécessaires en exécutant `pip install -r requirements.txt`. Enfin, lancez l'application avec `python main.py`.
+Assurez-vous d'avoir Python 3.6 ou une version ultérieure installé sur votre système. Pour installer Anarchtech, clonez le dépôt avec la commande `git clone https://github.com/ANF122/Anarctech.git`, puis accédez au répertoire cloné avec `cd anarchtech`.  Enfin, lancez l'application avec ` Anarctech.py`.
 
 ## Utilisation
 
@@ -22,7 +22,7 @@ Pour utiliser Anarchtech, lancez l'application en exécutant `main.py`. Lors du 
 
 ## Développement
 
-Pour contribuer au développement d'Anarchtech, vous pouvez soumettre des issues ou des pull requests sur le dépôt GitHub. Le projet utilise plusieurs bibliothèques Python, dont la liste complète est disponible dans le fichier `requirements.txt`.
+Pour contribuer au développement d'Anarchtech, vous pouvez soumettre des issues ou des pull requests sur le dépôt GitHub. Le projet utilise plusieurs bibliothèques Python . 
 
 ## License
 
