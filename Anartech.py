@@ -6,14 +6,15 @@ import time
 import os
 import shutil
 from docx import Document
-
+from spellchecker import SpellChecker
+from PIL import Image, ImageTk
 class FuturistAnarchistApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Application Anarchiste Futuriste")
+        self.root.title("Anartech")
         self.root.geometry("1200x800")
         self.root.configure(bg="#000000")  # Noir pour le thème anarchiste
-
+        self.root.iconbitmap("C:/Users/pirat/Anarchist.ico")
         # Create the installation menu
         self.show_installation_menu()
 
@@ -23,7 +24,7 @@ class FuturistAnarchistApp:
         self.installation_window.title("Installation")
         self.installation_window.geometry("400x300")
         self.installation_window.configure(bg="#000000")  # Noir pour le thème anarchiste
-
+        self.installation_window.iconbitmap("C:/Users/pirat/Anarchist.ico")
         tk.Label(self.installation_window, text="Bienvenue dans le programme d'installation", 
                  bg="#000000", fg="#FFFFFF", font=("Arial", 14)).pack(pady=10)
 
@@ -45,7 +46,7 @@ class FuturistAnarchistApp:
         self.setup_window.title("Configuration")
         self.setup_window.geometry("400x300")
         self.setup_window.configure(bg="#000000")  # Noir pour le thème anarchiste
-
+        self.setup_window.iconbitmap("C:/Users/pirat/Anarchist.ico")
         tk.Label(self.setup_window, text="Configuration de l'application en cours...",
                  bg="#000000", fg="#FFFFFF", font=("Arial", 14)).pack(pady=20)
 
@@ -82,7 +83,7 @@ class FuturistAnarchistApp:
         # Create the menu
         self.menu = tk.Menu(self.root, bg="#111111", fg="#FFFFFF")
         self.root.config(menu=self.menu)
-
+        self.root.iconbitmap("C:/Users/pirat/Anarchist.ico")  
         self.file_menu = tk.Menu(self.menu, tearoff=0, bg="#222222", fg="#FFFFFF")
         self.menu.add_cascade(label="Fichier", menu=self.file_menu)
         self.file_menu.add_command(label="Ouvrir", command=self.open_file)
@@ -101,9 +102,10 @@ class FuturistAnarchistApp:
         self.menu.add_cascade(label="Format", menu=self.format_menu)
         self.format_menu.add_command(label="Police", command=self.choose_font)
         self.format_menu.add_command(label="Couleur du Texte", command=self.choose_color)
-        self.format_menu.add_command(label="Alignement Gauche", command=lambda: self.text_area.tag_configure("left", justify='left'))
-        self.format_menu.add_command(label="Alignement Centre", command=lambda: self.text_area.tag_configure("center", justify='center'))
-        self.format_menu.add_command(label="Alignement Droit", command=lambda: self.text_area.tag_configure("right", justify='right'))
+        self.format_menu.add_command(label="Changer Couleur de Fond", command=self.change_background_color)
+        self.format_menu.add_command(label="Alignement Gauche", command=lambda: self.set_text_alignment('left'))
+        self.format_menu.add_command(label="Alignement Centre", command=lambda: self.set_text_alignment('center'))
+        self.format_menu.add_command(label="Alignement Droit", command=lambda: self.set_text_alignment('right'))
 
         # Create the toolbar
         self.toolbar = tk.Frame(self.root, bg="#111111")
@@ -148,16 +150,70 @@ class FuturistAnarchistApp:
 
         self.stop_notifications_button = tk.Button(self.button_frame, text="Arrêter Notifications", command=self.stop_notifications, bg="#333333", fg="#FFFFFF", relief=tk.FLAT)
         self.stop_notifications_button.pack(side=tk.LEFT, padx=2, pady=2)
+       
+       # Bouton de vérification de l'orthographe
+        self.check_spelling_button = tk.Button(self.button_frame, text="Vérifier Orthographe", command=self.check_spelling, bg="#333333", fg="#FFFFFF", relief=tk.FLAT)
+        self.check_spelling_button.pack(side=tk.LEFT, padx=2, pady=2)
+        
+        self.insert_image_button = tk.Button(self.button_frame, text="Insérer Image", command=self.insert_image, bg="#333333", fg="#FFFFFF", relief=tk.FLAT)
+        self.insert_image_button.pack(side=tk.LEFT, padx=2, pady=2)  
 
         # Create a listbox to manage users
         self.users = []
         self.users_listbox = tk.Listbox(self.root, bg="#333333", fg="#FFFFFF", font=("Arial", 12))
         self.users_listbox.pack(side=tk.LEFT, fill=tk.Y)
-
         self.text_editor_window = None
         self.notification_thread = None
         self.notification_thread_running = False
 
+
+
+    
+    def set_text_alignment(self, alignment):
+        """Set the alignment of the entire text."""
+        # Configure the tag for alignment
+        self.text_area.tag_configure("align", justify=alignment)
+
+        # Apply the alignment tag to the entire text
+        self.text_area.tag_remove("align", "1.0", "end")  # Remove previous alignment tags
+        self.text_area.tag_add("align", "1.0", "end")  # Apply new alignment to all text
+    def check_spelling(self):
+        """Vérifie l'orthographe du texte dans la zone de texte et demande confirmation pour chaque correction."""
+        spell = SpellChecker()
+        content = self.text_area.get(1.0, tk.END).strip()
+        words = content.split()
+
+        misspelled = spell.unknown(words)
+
+        if misspelled:
+            for word in misspelled:
+                # Obtenir les suggestions de correction
+                suggestions = list(spell.candidates(word))
+                if suggestions:
+                    # Convertir les suggestions en chaîne de caractères
+                    suggestion_text = ', '.join(suggestions)
+                    # Demander confirmation à l'utilisateur
+                    response = messagebox.askyesno(
+                        "Correction orthographique",
+                        f"Le mot '{word}' est mal orthographié. Souhaitez-vous le remplacer par l'une des suggestions suivantes : {suggestion_text} ?"
+                    )
+                    if response:
+                        # Remplacer le mot par la première suggestion
+                        content = content.replace(word, suggestions[0])
+        
+            # Met à jour le texte dans la zone de texte
+            self.text_area.delete(1.0, tk.END)
+            self.text_area.insert(tk.END, content)
+        else:
+            messagebox.showinfo("Vérification d'orthographe", "Aucun mot mal orthographié trouvé.")
+
+
+ 
+    def change_background_color(self):
+        """Allow the user to choose a background color for the text area."""
+        color_code = colorchooser.askcolor(title="Choisir Couleur de Fond")[1]
+        if color_code:
+            self.text_area.configure(bg=color_code)
     def add_user(self):
         """Add a new user to the list."""
         user_name = simpledialog.askstring("Ajouter Utilisateur", "Entrez le nom de l'utilisateur:")
@@ -175,9 +231,14 @@ class FuturistAnarchistApp:
     def show_citations(self):
         """Show a list of citations."""
         citations = [
-            "Liberté, égalité, fraternité.",
-            "L'anarchisme est l'ordre sans autorité.",
-            "La liberté est la mère de toutes les autres libertés."
+            "Mikhail Bakounine : 'La liberté sans socialisme est un privilège, l'inégalité; le socialisme sans liberté est une servitude.'",
+        "Emma Goldman : 'Si je ne peux danser, ce n'est pas ma révolution.'",
+        "Pierre Kropotkine : 'L'anarchisme est un principe de vie, une philosophie qui est pratiquée tous les jours, par tous ceux qui cherchent à vivre librement et en harmonie avec les autres.'",
+        "Noam Chomsky : 'L'anarchisme est un système de pensée qui ne repose pas sur la force, mais sur le consentement.'",
+        "Lucy Parsons : 'Il n'y a pas de paix dans l'esclavage.'",
+        "Alexander Berkman : 'La lutte pour la liberté est la lutte pour la vie.'",
+        "David Graeber : 'Le véritable pouvoir est celui qui ne se voit pas.'",
+        "Pierre-Joseph Proudhon : 'La propriété, c'est le vol.'"
         ]
         citations_text = "\n".join(citations)
         messagebox.showinfo("Citations", citations_text)
@@ -198,7 +259,7 @@ class FuturistAnarchistApp:
     def notification_loop(self):
         """Loop to generate notifications."""
         while self.notification_thread_running:
-            self.root.after(0, lambda: messagebox.showinfo("Notification", "Ceci est une notification!"))
+            self.root.after(0, lambda: messagebox.showinfo("Notification", "Pierre-Joseph Proudhon : 'La propriété, c'est le vol"))
             time.sleep(10)  # Wait for 10 seconds before showing another notification
 
     def open_file(self):
@@ -292,6 +353,7 @@ class FuturistAnarchistApp:
     def change_font_family(self, family):
         """Change the font family."""
         self.text_area.configure(font=(family, self.font_size.get()))
+
 
     def find_text(self):
         """Find text in the text area."""
